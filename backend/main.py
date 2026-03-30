@@ -7,7 +7,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.gzip import GZipMiddleware
 import uvicorn
+from cachetools import TTLCache
 
 from app.core.config import settings
 from app.core.database import Base, engine
@@ -36,29 +38,43 @@ app = FastAPI(
     - Low stock alerts with email notifications
     - CSV bulk upload for products
     - JWT authentication
-    
-    ## Authentication
-    All endpoints except `/auth/register` and `/auth/login` require Bearer token authentication.
     """,
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
 
+# Add GZip compression
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
 # CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Simple in-memory cache
+cache = TTLCache(maxsize=100, ttl=300)
+
+
+def get_cache(key):
+    return cache.get(key)
+
+
+def set_cache(key, value):
+    cache[key] = value
+
+
+def clear_cache():
+    cache.clear()
+
 
 # Exception handlers
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    """Handle validation errors with better messages."""
     errors = []
     for error in exc.errors():
         field = ".".join(str(loc) for loc in error["loc"])
@@ -75,7 +91,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    """Handle unexpected errors."""
     return JSONResponse(
         status_code=500,
         content={
@@ -96,7 +111,6 @@ app.include_router(alerts_router, prefix="/api")
 
 @app.get("/")
 async def root():
-    """Root endpoint - API information."""
     return {
         "name": settings.APP_NAME,
         "version": "1.0.0",
@@ -115,8 +129,13 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint for monitoring."""
-    return {"status": "healthy", "service": "inventory-api"}
+    return {"status": "healthy", "service": "inventory-api", "cache_size": len(cache)}
+
+
+@app.post("/cache/clear")
+async def clear_cache_endpoint():
+    clear_cache()
+    return {"message": "Cache cleared"}
 
 
 if __name__ == "__main__":

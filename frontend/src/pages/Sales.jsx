@@ -102,7 +102,7 @@ const Sales = () => {
             <div className="stat-card-icon bg-green-100">
               <ShoppingCart className="w-6 h-6 text-green-600" />
             </div>
-            <p className="text-sm text-gray-500">Total Sales (7 days)</p>
+            <p className="text-sm text-gray-500">Total Sales</p>
             <p className="text-3xl font-bold text-gray-800">{summary.total_sales}</p>
           </div>
 
@@ -160,9 +160,9 @@ const Sales = () => {
                         {sale.product_name}
                       </td>
                       <td>{sale.quantity}</td>
-                      <td>${sale.unit_price.toFixed(2)}</td>
+                      <td>{formatINR(sale.unit_price)}</td>
                       <td className="font-semibold text-green-600">
-                        ${sale.total_amount.toFixed(2)}
+                        {formatINR(sale.total_amount)}
                       </td>
                     </tr>
                   ))}
