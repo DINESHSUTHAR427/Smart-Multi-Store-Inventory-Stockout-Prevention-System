@@ -1,0 +1,348 @@
+{
+  "info": {
+    "name": "Smart Inventory API",
+    "description": "API Collection for Smart Multi-Store Inventory System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me",
+            "header": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stores",
+      "item": [
+        {
+          "name": "List Stores",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/stores",
+            "header": []
+          }
+        },
+        {
+          "name": "Create Store",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/stores",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Store\",\n  \"location\": \"123 Main Street\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Store",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/stores/1",
+            "header": []
+          }
+        },
+        {
+          "name": "Update Store",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/stores/1",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Store Name\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Store",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/stores/1",
+            "header": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products?store_id=1",
+              "query": [
+                {
+                  "key": "store_id",
+                  "value": "1"
+                },
+                {
+                  "key": "low_stock_only",
+                  "value": "false"
+                }
+              ]
+            },
+            "header": []
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/products",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"store_id\": 1,\n  \"name\": \"Widget A\",\n  \"sku\": \"WGT-001\",\n  \"stock\": 100,\n  \"price\": 9.99,\n  \"reorder_level\": 20,\n  \"category\": \"Electronics\",\n  \"unit\": \"units\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Product",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/products/1",
+            "header": []
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/products/1",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 150\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/products/1",
+            "header": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "item": [
+        {
+          "name": "List Sales",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sales?store_id=1",
+              "query": [
+                {
+                  "key": "store_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "header": []
+          }
+        },
+        {
+          "name": "Record Sale",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/sales",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Sales Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sales/summary?store_id=1&days=7",
+              "query": [
+                {
+                  "key": "store_id",
+                  "value": "1"
+                },
+                {
+                  "key": "days",
+                  "value": "7"
+                }
+              ]
+            },
+            "header": []
+          }
+        },
+        {
+          "name": "Get Sales by Date",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sales/by-date?store_id=1&days=7",
+              "query": [
+                {
+                  "key": "store_id",
+                  "value": "1"
+                },
+                {
+                  "key": "days",
+                  "value": "7"
+                }
+              ]
+            },
+            "header": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forecasts",
+      "item": [
+        {
+          "name": "Generate Forecast",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/forecasts/1?days=30",
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            },
+            "header": []
+          }
+        },
+        {
+          "name": "Get Reorder Suggestion",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/forecasts/reorder-suggestion/1",
+            "header": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        {
+          "name": "List Low Stock Alerts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/alerts?store_id=1",
+              "query": [
+                {
+                  "key": "store_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "header": []
+          }
+        },
+        {
+          "name": "Send Alert Email",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/alerts/send",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"store_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/alerts/dashboard?store_id=1",
+              "query": [
+                {
+                  "key": "store_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "header": []
+          }
+        }
+      ]
+    }
+  ]
+}

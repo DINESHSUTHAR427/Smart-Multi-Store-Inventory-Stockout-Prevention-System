@@ -1,0 +1,6 @@
+name,stock,price,reorder_level,sku,category,unit
+Product A,100,9.99,20,SKU001,Electronics,units
+Product B,50,14.99,15,SKU002,Groceries,kg
+Product C,75,4.50,25,SKU003,Beverages,liters
+Product D,200,2.99,50,SKU004,Snacks,units
+Product E,30,29.99,10,SKU005,Electronics,units
