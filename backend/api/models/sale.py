@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
-from app.core.database import Base
+from ..core.database import Base
 
 
 class Sale(Base):

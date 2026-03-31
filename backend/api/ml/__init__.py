@@ -1,4 +1,4 @@
-from app.ml.forecasting import (
+from .forecasting import (
     DemandForecaster,
     get_historical_sales,
     calculate_average_demand,

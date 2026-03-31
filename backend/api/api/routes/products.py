@@ -7,13 +7,13 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Query
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
-from app.core.security import get_current_user
-from app.models.user import User
-from app.models.store import Store
-from app.models.product import Product
-from app.schemas.product import ProductCreate, ProductUpdate, ProductResponse
-from app.services.csv_service import csv_service
+from ...core.database import get_db
+from ...core.security import get_current_user
+from ...models.user import User
+from ...models.store import Store
+from ...models.product import Product
+from ...schemas.product import ProductCreate, ProductUpdate, ProductResponse
+from ...services.csv_service import csv_service
 
 router = APIRouter(prefix="/products", tags=["Products"])
 

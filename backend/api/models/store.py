@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
-from app.core.database import Base
+from ..core.database import Base
 
 
 class Store(Base):

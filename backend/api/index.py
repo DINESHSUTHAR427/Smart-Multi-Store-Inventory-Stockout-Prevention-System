@@ -1,19 +1,13 @@
-"""
-Smart Multi-Store Inventory & Stockout Prevention System
-FastAPI Backend Application
-"""
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.gzip import GZipMiddleware
-import uvicorn
 from cachetools import TTLCache
 
-from api.core.config import settings
-from api.core.database import Base, engine
-from api.api.routes import (
+from .core.config import settings
+from .core.database import Base, engine
+from .api.routes import (
     auth_router,
     stores_router,
     products_router,
@@ -22,10 +16,8 @@ from api.api.routes import (
     alerts_router
 )
 
-# Create database tables
 Base.metadata.create_all(bind=engine)
 
-# Initialize FastAPI app
 app = FastAPI(
     title=settings.APP_NAME,
     description="""
@@ -44,10 +36,7 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Add GZip compression
 app.add_middleware(GZipMiddleware, minimum_size=1000)
-
-# CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -56,23 +45,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Simple in-memory cache
 cache = TTLCache(maxsize=100, ttl=300)
 
 
-def get_cache(key):
-    return cache.get(key)
-
-
-def set_cache(key, value):
-    cache[key] = value
-
-
-def clear_cache():
-    cache.clear()
-
-
-# Exception handlers
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     errors = []
@@ -82,10 +57,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     
     return JSONResponse(
         status_code=422,
-        content={
-            "detail": "Validation Error",
-            "errors": errors
-        }
+        content={"detail": "Validation Error", "errors": errors}
     )
 
 
@@ -100,7 +72,6 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Include routers with /api prefix
 app.include_router(auth_router, prefix="/api")
 app.include_router(stores_router, prefix="/api")
 app.include_router(products_router, prefix="/api")
@@ -134,14 +105,9 @@ async def health_check():
 
 @app.post("/cache/clear")
 async def clear_cache_endpoint():
-    clear_cache()
+    cache.clear()
     return {"message": "Cache cleared"}
 
 
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=settings.DEBUG
-    )
+def handler(request, context):
+    return app(request, context)

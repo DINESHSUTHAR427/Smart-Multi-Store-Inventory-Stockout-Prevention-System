@@ -8,8 +8,8 @@ import io
 from typing import List, Dict, Tuple
 from sqlalchemy.orm import Session
 
-from app.models.product import Product
-from app.models.store import Store
+from ..models.product import Product
+from ..models.store import Store
 
 
 class CSVService:

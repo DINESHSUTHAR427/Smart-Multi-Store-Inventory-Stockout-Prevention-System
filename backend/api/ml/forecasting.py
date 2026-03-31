@@ -13,8 +13,8 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Tuple
 from sqlalchemy.orm import Session
 
-from app.models.sale import Sale
-from app.models.product import Product
+from ..models.sale import Sale
+from ..models.product import Product
 
 
 class DemandForecaster:

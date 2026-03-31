@@ -9,13 +9,13 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from app.core.database import get_db
-from app.core.security import get_current_user
-from app.models.user import User
-from app.models.store import Store
-from app.models.product import Product
-from app.models.sale import Sale
-from app.schemas.sale import SaleCreate, SaleResponse, SalesSummary, SalesByDate
+from ...core.database import get_db
+from ...core.security import get_current_user
+from ...models.user import User
+from ...models.store import Store
+from ...models.product import Product
+from ...models.sale import Sale
+from ...schemas.sale import SaleCreate, SaleResponse, SalesSummary, SalesByDate
 
 router = APIRouter(prefix="/sales", tags=["Sales"])
 

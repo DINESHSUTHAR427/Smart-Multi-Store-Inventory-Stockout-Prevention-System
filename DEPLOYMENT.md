@@ -44,7 +44,7 @@ This guide covers deploying the Smart Multi-Store Inventory & Stockout Preventio
 2. **Update API URL**
    - Create `.env` file:
      ```
-     VITE_API_URL=https://your-backend-url.onrender.com/api
+     VITE_API_URL=https://your-backend-url.onrender.com
      ```
 
 3. **Deploy Frontend**
@@ -56,7 +56,7 @@ This guide covers deploying the Smart Multi-Store Inventory & Stockout Preventio
      - **Build Command**: `npm run build`
      - **Output Directory**: `dist`
    - Add Environment Variable:
-     - `VITE_API_URL` = your backend URL
+     - `VITE_API_URL` = your backend URL (without /api)
 
 4. **Update CORS in Backend**
    - In `backend/main.py`, update CORS origins to your Vercel URL:

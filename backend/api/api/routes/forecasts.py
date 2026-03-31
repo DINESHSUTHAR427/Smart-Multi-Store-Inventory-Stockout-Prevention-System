@@ -6,13 +6,13 @@ ML-powered demand prediction and reorder suggestions.
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
-from app.core.security import get_current_user
-from app.models.user import User
-from app.models.store import Store
-from app.models.product import Product
-from app.schemas.forecast import ForecastResponse, ForecastData, ReorderSuggestion
-from app.ml.forecasting import get_demand_forecast, calculate_reorder_suggestion
+from ...core.database import get_db
+from ...core.security import get_current_user
+from ...models.user import User
+from ...models.store import Store
+from ...models.product import Product
+from ...schemas.forecast import ForecastResponse, ForecastData, ReorderSuggestion
+from ...ml.forecasting import get_demand_forecast, calculate_reorder_suggestion
 
 router = APIRouter(prefix="/forecasts", tags=["Forecasts"])
 
